@@ -1,0 +1,15 @@
+<suite name="tetNG Test" verbose="10" allow-return-values="true">
+    <listeners>
+        <listener class-name="utils.TakeScreenshot" />
+    </listeners>
+    <test name="testNG test">
+        <groups>
+            <run>
+                <include name="testNG"/>
+            </run>
+        </groups>
+        <packages>
+            <package name="functional"/>
+        </packages>
+    </test>
+</suite>

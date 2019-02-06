@@ -1,0 +1,135 @@
+buildscript {
+    repositories { jcenter() }
+
+    dependencies {
+        classpath 'ru.alfalab.gradle:cucumber-reporting-gradle-plugin:0.1.0'
+    }
+}
+
+apply plugin: 'ru.alfalab.cucumber-reporting'
+
+apply plugin: 'java'
+
+version '1.0-SNAPSHOT'
+
+sourceCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile project(':testModule:testUtils')
+    compile group: 'junit', name: 'junit', version: '4.12'
+    compile group: 'info.cukes', name: 'cucumber-java', version: '1.2.5'
+    compile group: 'org.seleniumhq.selenium', name: 'selenium-support', version: '3.11.0'
+    testCompile 'info.cukes:cucumber-java:1.2.5'
+    testCompile 'info.cukes:cucumber-core:1.2.5'
+    testCompile 'info.cukes:cucumber-html:0.2.6'
+    testCompile 'info.cukes:cucumber-junit:1.2.5'
+    testCompile 'info.cukes:cucumber-jvm:1.2.5'
+    testCompile 'info.cukes:cucumber-jvm-deps:1.0.5'
+    testCompile 'junit:junit:4.12'
+    testCompile 'com.github.mkolisnyk:cucumber-reports:0.0.2'
+    compile group: 'com.github.mkolisnyk', name: 'cucumber-runner', version: '1.0.8'
+
+//    compile group: 'gradle.plugin.com.github.spacialcircumstances', name: 'gradle-cucumber-reporting', version: '0.0.11'
+    testCompile 'io.cucumber:cucumber-java:4.2.0'
+//    compile 'org.projectlombok:lombok:1.16.20'
+//    testCompile 'org.springframework:spring-test:5.0.5.RELEASE',
+//            'com.google.inject:guice:4.2.0'
+
+
+}
+
+//cucumberReporting {
+//  cucumberResultsDirectory = file("${project.buildDir}/cucumber") // cucumber results dir (eg. cucumber.json location)
+//  outputDirectory = file("${project.buildDir}/reports/cucumber") // directory for save html reports
+//}
+
+//task runCucumberScenario(type: Test) {
+//    dependsOn assemble, compileTestJava
+//    doLast {
+//
+//        javaexec {
+//            System.properties.get('browser', 'firefox')
+//            systemProperties System.properties
+//            main = "cucumber.api.cli.Main"
+//            classpath = configurations.cucumberRuntime + sourceSets.main.output + sourceSets.test.output
+//            args = ['-f', 'html:/testModule/functionalTests/build/reports/cucumber/cucumber_report.html', '--glue', 'stepDefinitions', 'src/test/resources/features']
+//}
+//}
+//}
+
+task cucumber(type: Test) {
+    dependsOn assemble, compileTestJava
+    doLast {
+        javaexec {
+            systemProperty "browser", "firefox"
+            main = "cucumber.api.cli.Main"
+            classpath = configurations.cucumberRuntime + sourceSets.main.output + sourceSets.test.output
+            args = ['--plugin', 'pretty', '--plugin', 'json:build/reports/tests/cucumber/file.json', '-f', 'html:build/reports/tests/cucumber/cucumber_report', '--glue', 'stepDefinitions', 'src/test/resources/features']
+        }
+    }
+}
+
+task abc(type: Test) {
+    dependsOn assemble, compileTestJava
+    doLast {
+        javaexec {
+            systemProperty "browser", "chrome"
+            main = "cucumber.api.cli.Main"
+            classpath = configurations.cucumberRuntime + sourceSets.main.output + sourceSets.test.output
+            args = ['--plugin', 'pretty', '--plugin', 'json:build/reports/tests/cucumber/file.json', '-f', 'html:build/reports/tests/cucumber/cucumber_report', '--glue', 'stepDefinitions', 'src/test/resources/features', '--tags', '@abc']
+        }
+    }
+}
+
+task insuranceFormSubmission(type: Test) {
+    dependsOn assemble, compileTestJava
+    doLast {
+        javaexec {
+            systemProperty "browser", "chrome"
+            main = "cucumber.api.cli.Main"
+            classpath = configurations.cucumberRuntime + sourceSets.main.output + sourceSets.test.output
+            args = ['--plugin', 'pretty', '--plugin', 'json:build/reports/tests/cucumber/file.json', '-f', 'html:build/reports/tests/cucumber/cucumber_report', '--glue', 'stepDefinitions', 'src/test/resources/features', '--tags', '@form']
+        }
+    }
+}
+
+
+configurations {
+    cucumberRuntime {
+        extendsFrom testRuntime
+    }
+}
+
+task testNGTests(type: Test) {
+    dependsOn assemble, compileTestJava
+    useTestNG() {
+        options {
+            listeners << 'org.uncommons.reportng.HTMLReporter'
+            listeners << 'org.uncommons.reportng.JUnitXMLReporter'
+        }
+        systemProperty "browser", "firefox"
+        suites 'testNGTests.xml'
+    }
+
+    testLogging.showStandardStreams = true
+
+    // set heap size for the test JVM(s)
+    minHeapSize = "128m"
+    maxHeapSize = "512m"
+
+    // listen to events in the test execution lifecycle
+    beforeTest { descriptor ->
+        logger.lifecycle("Running test: " + descriptor)
+    }
+
+    // listen to standard out and standard error of the test JVM(s)
+    onOutput { descriptor, event ->
+        logger.lifecycle("Test: " + descriptor + " produced standard out/err: " + event.message)
+    }
+
+
+}

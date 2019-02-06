@@ -1,0 +1,12 @@
+URL1=http://dummy.restapiexample.com/api/v1
+POST_URL=http://services.labs.blueowl.xyz/interviews/public/sdet-interview
+QUERY_PARAM1=hello
+SALARY=3123
+FIRST_NAME=first
+LAST_NAME=last
+ADDRESS=add
+GENDER=male
+DOB=1998-12-31
+DL_NUMBER=D1234567
+DL_EXP=2019-01-23
+EFFD_DATE=2019-02-22

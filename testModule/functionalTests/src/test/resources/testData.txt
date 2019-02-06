@@ -1,0 +1,13 @@
+INVALID_AGE1=0
+INVALID_AGE2=1100
+INVALID_AGE3=1.0
+INVALID_AGE4=0.1
+INVALID_AGE5=q1
+INVALID_AGE6=1@1
+INVALID_AGE7=200/2
+
+INVALID_DATE1=30 feb, 29 feb 18, 32 jan, -1 jan, invalid month, invalid year, too future, too past,special char,4char for month
+
+INVALID_DATE_FORMATE1=dd/mm/yyyy,dd-mm-yyyy,mm/dd/yyyy,mm-dd-yyyy,mmm-dd-yyyy,dd-mmm-yyyy,dd/mm/yy,dd-mm-yy,mm/dd/yy,mm-dd-yy,mmm-dd-yy,dd-mmm-yy
+
+SEARCH_PARAM=hello
